@@ -133,7 +133,6 @@ vnoremap P "_dP
 " 删除不剪切
 " 组合命令删除不剪切
 nnoremap diw "_diw
-nnoremap dia "_dia
 nnoremap di" "_di"
 nnoremap di' "_di'
 nnoremap di( "_di(
@@ -142,7 +141,6 @@ nnoremap di{ "_di{
 nnoremap di< "_di<
 
 nnoremap daw "_daw
-nnoremap daa "_daa
 nnoremap da" "_da"
 nnoremap da' "_da'
 nnoremap da( "_da(
@@ -151,7 +149,6 @@ nnoremap da{ "_da{
 nnoremap da< "_da<
 
 nnoremap ciw "_ciw
-nnoremap cia "_cia
 nnoremap ci" "_ci"
 nnoremap ci' "_ci'
 nnoremap ci( "_ci(
@@ -160,7 +157,6 @@ nnoremap ci{ "_ci{
 nnoremap ci< "_ci<
 
 nnoremap caw "_caw
-nnoremap caa "_caa
 nnoremap ca" "_ca"
 nnoremap ca' "_ca'
 nnoremap ca( "_ca(
@@ -226,3 +222,13 @@ nnoremap yxr ^v$x
 nnoremap vir ^v$
 nnoremap var ^v$
 " 选中行(不含换行符)
+
+function! Fdemo()
+    let code = "demo"
+    return code
+endfunction
+
+
+
+
+
