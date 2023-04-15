@@ -4,6 +4,7 @@
 let mapleader = "\<space>"
 
 """ Plugins  --------------------------------
+" Plugins-marketplace : IdeaVim  AceJump IdeaVim-EasyMotion IdeaVim-Quickscope IdeaVimExtension
 " 环绕插入符号
 set surround
 " 快速跳转
@@ -14,6 +15,12 @@ set argtextobj
 set exchange
 " 复制时高亮
 set highlightedyank
+" 代码树
+set NERDTree
+" 搜索时提示高亮
+set quickscope
+" 增强段落移动
+set vim-paragraph-motion
 " 普通模式自动切换为英文输入法
 set keep-english-in-normal
 " 取消vim操作声音
@@ -27,15 +34,20 @@ let g:highlightedyank_highlight_duration = 1000
 " 自定义颜色
 " let g:highlightedyank_highlight_color = "rgba(160, 160, 160, 155)"
 let g:argtextobj_pairs="[:],(:),<:>"
+" Turn off this plugin when the length of line is longer than g:qs_max_chars.
+let g:qs_max_chars=200
 """ Plugin settings -------------------------
 """ Plugin mapping ------------------------
 nmap ss <Plug>(easymotion-s2)
 """ Plugin mapping ------------------------
 """ Action list mapping ------------------------
+" 定位到文件树
+nmap <Leader>sp <Action>(SelectInProjectView)
 " 鼠标悬停
 nmap <Leader>ed <Action>(ShowErrorDescription)
+nmap <Leader>jd <Action>(QuickJavaDoc)
 " 最近编辑
-nmap <Leader><Leader>e <Action>(RecentLocations)
+nmap <M-S-e> <Action>(RecentLocations)
 " 当前页面方法列表
 nmap <Leader>fs <Action>(FileStructurePopup)
 " 选择模式扩大选择范围
@@ -51,7 +63,7 @@ nmap <A-h> <Action>(Back)
 " navigate forward
 nmap <A-l> <Action>(Forward)
 " 多光标选中单词
-nmap <Leader>sa <Action>(SelectAllOccurrences)
+nmap <Leader><Leader>a <Action>(SelectAllOccurrences)
 nmap <C-g> <Action>(SelectNextOccurrence)
 nmap <C-S-g> <Action>(UnselectPreviousOccurrence)
 nmap <M-g> <Action>(FindNext)
@@ -61,6 +73,8 @@ vmap <Tab> <Action>(EditorIndentSelection)
 vmap <S-Tab> <Action>(EditorUnindentSelection)
 " 合并行
 nmap <S-j> <Action>(EditorJoinLines)
+" 切换分割窗口的光标
+nmap <C-s> <Action>(NextSplitter)
 """ Action list mapping ------------------------
 
 " Do incremental searching
@@ -72,8 +86,6 @@ set clipboard+=ideaput
 
 " 不区分大小写
 set ignorecase smartcase
-" 忽略大小写
-"set ignorecase
 
 " 显示匹配括号
 set showmatch
@@ -84,7 +96,7 @@ set number relativenumber
 " 突出搜索内容 ':noh'可取消突出
 " set nohlsearch
 " ic 不区分大小写
-set hls ic
+" set hls ic
 
 " 将系统剪贴板与vim剪贴板合并
 set clipboard=unnamed
@@ -103,31 +115,37 @@ set autoindent
 " 按'*'搜索光标选中的内容, 取消高亮`:noh`
 vnoremap * "ry/<C-R>r<CR>
 
+" 针对驼峰命名的移动
+nnoremap <C-w> [w
+nnoremap <C-b> [b
+vnoremap <C-w> [w
+vnoremap <C-b> [b
 " 删除不剪切
-nnoremap d "_d
+noremap <C-d> a<Backspace><Esc>
+nnoremp d "_d
 nnoremap dd "_dd
 nnoremap D "_D
-nnoremap <leader>d ""d
-nnoremap <leader>dd ""dd
-nnoremap <leader>D ""D
+" nnoremap <leader>d ""d
+" nnoremap <leader>dd ""dd
+" nnoremap <leader>D ""D
 nnoremap c "_c
 nnoremap cc "_cc
 nnoremap C "_C
-nnoremap <leader>c ""c
-nnoremap <leader>cc ""cc
-nnoremap <leader>C ""C
+" nnoremap <leader>c ""c
+" nnoremap <leader>cc ""cc
+" nnoremap <leader>C ""C
 vnoremap d "_d
 vnoremap dd "_dd
 vnoremap D "_D
-vnoremap <leader>d ""d
-vnoremap <leader>dd ""dd
-vnoremap <leader>D ""D
+" vnoremap <leader>d ""d
+" vnoremap <leader>dd ""dd
+" vnoremap <leader>D ""D
 vnoremap c "_c
 vnoremap cc "_cc
 vnoremap C "_C
-vnoremap <leader>c ""c
-vnoremap <leader>cc ""cc
-vnoremap <leader>C ""C
+" vnoremap <leader>c ""c
+" vnoremap <leader>cc ""cc
+" vnoremap <leader>C ""C
 vnoremap p "_dp
 vnoremap P "_dP
 " 删除不剪切
@@ -184,22 +202,18 @@ inoremap <C-j> <Down>
 inoremap <C-k> <Up>
 inoremap <C-l> <Right>
 inoremap <C-d> <Backspace>
-inoremap <C-b> <Esc>bi
-inoremap <C-w> <Esc><Right>wi
+inoremap <C-b> <Esc>[bi
+inoremap <C-w> <Esc><Right>[wi
 inoremap <C-e> <Esc>ea
 " 插入模式移动
 " 插入模式转换普通模式
 inoremap jk <Esc>
 " 插入模式转换普通模式
 " 切割窗口
-nmap sx :split<Return>
-nmap sy :vsplit<Return>
-nmap <C-w> <C-w>w
+nnoremap sx :split<Return>
+nnoremap sy :vsplit<Return>
+" nnoremap <C-w> <C-w>w
 " 切割窗口
-" 文件保存
-inoremap <C-s> <C-c>:w<CR>a
-nnoremap <C-s> <C-c>:w<CR>
-" 文件保存
 " 保存行 至末尾
 nnoremap Y y$
 " 保存行 至末尾
@@ -221,6 +235,14 @@ nnoremap yxr ^v$x
 " 选中行(不含换行符)
 nnoremap vir ^v$
 nnoremap var ^v$
+" 多行
+nnoremap s( V/(<CR>%
+nnoremap s{ V/{<CR>%
+nnoremap s[ V/[<CR>%
+nnoremap s; V/;<CR>%
+nnoremap vr( va(<ESC>V%
+nnoremap vr{ va{<ESC>V%
+nnoremap vr[ va[<ESC>V%
 " 选中行(不含换行符)
 
 function! Fdemo()
@@ -232,3 +254,12 @@ endfunction
 
 
 
+""" IdeaVim development stuff
+" This is actually an undocumented option for internal use.
+" If there is a bug in IdeaVim code and after some command,
+" IdeaVim calculates that the caret should be located at 1000000 offset in a short file,
+" we have a protection that would put the caret just at the file end.
+" This way the actual error is hidden from the user. With this option enabled,
+" an exception will be thrown and IJ will show a notification that something is wrong.
+" Since I use IdeaVim for myself, I'd like to see such notifications and this option is enabled for me.
+set ideastrictmode
